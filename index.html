@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+        <link rel="stylesheet" href="style.css"> 
+        <title>Fetch y get</title>
+    </head>
+    <body>
+        <div class = "container">
+            <h5 class = "student">Ortolá Nicolás - NT2 2-1-B - Yatay</h5>
+            <div class = "vertical-center">
+                <!-- Form para buscar depto -->
+                <h4 class = "label" >Buscar depto</h4>
+                <form class="form-inline container-element">
+                    <div class="form-group mx-sm-3 mb-2">
+                    <label for="deptoQuery" class="sr-only">Depto Nº</label>
+                    <input type="text" class="form-control" id="deptoQuery" placeholder="Ingrese id">
+                    </div>
+                    <button id = "btn-search" type="button" class="btn btn-primary mb-2">Buscar</button>
+                </form>
+
+                <!-- Form para crear depto -->
+                <h4 class = "label" >Crear depto</h4>
+
+                <form class="form-inline container-element">
+                    <div class="form-group mx-sm-3 mb-2">
+                    <label for="deptoName" class="sr-only">Depto Nº</label>
+                    <input type="text" class="form-control" id="deptoName" placeholder="Ingrese nombre">
+                    </div>
+                    <button type="button" id = "btn-create" class="btn btn-primary mb-2">Crear</button>
+                </form>
+
+                <!-- Botón para crear base -->
+                <button id = "btn-createdb" type="button" class="btn btn-success mb-2 container-element btn-create" onclick="">Crear base</button>
+
+                <!-- Botón para listar todos los deptos -->
+                <button id="btn-listall" type="button" class="btn btn-secondary mb-2 container-element btn-listall">Listar deptos</button>
+            </div>
+        </div>
+
+
+        <!-- BEGIN SCRIPTS -->
+        <script>
+
+            // Crear base
+            const createDb = document.getElementById('btn-createdb')
+            createDb.onclick = function() {
+                let url = 'http://127.0.0.1:5501/crearbase'
+                let promesaFetch = fetch(url)
+                    promesaFetch.then(res => {
+                            if (res.ok) {
+                                alert("Se creó la base")
+                            } else {
+                                alert("Error al crear la base")
+                            }
+                    }) 
+            }
+
+            // Buscar depto por id
+            const searchBtn = document.getElementById('btn-search') 
+            searchBtn.onclick = function() {
+                let query = document.getElementById('deptoQuery').value
+                let url = `http://127.0.0.1:5501/departamento/${query}`
+                let promesaFetch = fetch(url)
+                promesaFetch.then(function(res){
+                    if(res.ok) {
+                    res.json().then(function(data) {
+                            alert(`Departamento ${data.id}: ${data.nombre}`)
+                        })
+                    } else {
+                        alert(`No se encontró un departamento con id ${query}`)
+                    }
+                }) 
+            }
+
+            // Crear depto
+            const createBtn = document.getElementById('btn-create') 
+            createBtn.onclick = function() {
+                let name = document.getElementById('deptoName').value
+                if (name === '') {
+                    return alert('Debe ingresar un nombre')
+                }
+                let formData = new FormData()
+                formData.append('nombre', name)
+                let url = `http://127.0.0.1:5501/departamento`
+                let promesaFetch = fetch(url, {
+                    method : 'post',
+                    body: formData
+                })
+                promesaFetch.then(function(res){
+                    if(res.ok) {
+                        alert(`Se creo un nuevo departamento: ${name}`)
+                    } else {
+                        alert(`No se pudo crear el departamento ${name}`)
+                    }
+                }) 
+            }
+
+            // Listar todos los deptos
+            const listAllBtn = document.getElementById('btn-listall') 
+            listAllBtn.onclick = function() {
+                let url = 'http://127.0.0.1:5501/departamento'
+                let promesaFetch = fetch(url)
+                    promesaFetch.then(res => {
+                        if(res.ok) {
+                            res.json().then(data => {
+                                let departamentos = `La base tiene ${data.length} departamentos: `
+                                data.forEach(d => {
+                                    depto = JSON.parse(d)
+                                    departamentos += `\n${depto.id} - ${depto.nombre}`
+                                })
+                                alert(departamentos)
+                            })
+                        } else {
+                            console.log("Error al intentar listar los deptos")
+                        }
+                    }) 
+            }
+        </script>
+        <!-- END SCRIPTS -->
+
+    </body>
+</html>

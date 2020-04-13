@@ -1,0 +1,39 @@
+.container {
+    height: 320px;
+    margin-top: 20px;
+    width: 60%;
+    position: relative;
+    border: 2px solid green;
+}
+
+.label {
+    font-family: monospace;
+    font-size: xx-large;
+}
+  
+.vertical-center {
+    margin: 0;
+    position: absolute;
+    top: 10%;
+    left: 35%;
+}
+
+.container-element {
+    padding: 10pt;
+}
+
+.btn-create {
+    position:relative;
+    margin-right: 30pt;
+}
+
+.btn-listall{
+    position: relative;
+    margin-left: 20pt;
+}
+
+.student {
+    font-family: serif;
+    font-style: italic;
+    color: grey;
+}
